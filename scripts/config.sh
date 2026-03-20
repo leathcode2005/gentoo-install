@@ -76,6 +76,8 @@ function verify_existing_unique_ids() {
 	local arg="$1"
 	local ids="${arguments[$arg]}"
 
+	local count_orig
+	local count_uniq
 	count_orig="$(tr ';' '\n' <<< "$ids" | grep -c '\S')"
 	count_uniq="$(tr ';' '\n' <<< "$ids" | grep '\S' | sort -u | wc -l)"
 	[[ $count_orig -gt 0 ]] \
