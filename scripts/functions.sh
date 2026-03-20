@@ -472,7 +472,7 @@ function format_zfs_standard() {
 	local devices=("$@")
 	local extra_args=()
 
-	einfo "Creating zfs pool on $devices_desc"
+	einfo "Creating zfs pool on $device_desc"
 
 	local zfs_stdin=""
 	if [[ "$encrypt" == true ]]; then
