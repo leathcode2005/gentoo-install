@@ -97,7 +97,7 @@ function configure_portage() {
 		try emerge --verbose --oneshot app-portage/mirrorselect
 
 		einfo "Selecting fastest portage mirrors"
-		mirrorselect_params=("-s" "4" "-b" "10")
+		local mirrorselect_params=("-s" "4" "-b" "10")
 		[[ $SELECT_MIRRORS_LARGE_FILE == "true" ]] \
 			&& mirrorselect_params+=("-D")
 		try mirrorselect "${mirrorselect_params[@]}"
@@ -153,7 +153,7 @@ function generate_initramfs() {
 		|| die "Could not figure out kernel version from /usr/src/linux symlink."
 	kver="${kver#linux-}"
 
-	dracut_opts=()
+	local dracut_opts=()
 	if [[ $SYSTEMD == "true" && $SYSTEMD_INITRAMFS_SSHD == "true" ]]; then
 		cd /tmp || die "Could not change into /tmp"
 		try git clone https://github.com/gsauthof/dracut-sshd
@@ -353,7 +353,7 @@ function generate_fstab() {
 	install -m0644 -o root -g root "$GENTOO_INSTALL_REPO_DIR/contrib/fstab" /etc/fstab \
 		|| die "Could not overwrite /etc/fstab"
 	if [[ $USED_ZFS != "true" && -n $DISK_ID_ROOT_TYPE ]]; then
-		add_fstab_entry "UUID=$(get_blkid_uuid_for_id "$DISK_ID_ROOT")" "/" "$DISK_ID_ROOT_TYPE" "$DISK_ID_ROOT_MOUNT_OPTS" "0 1"
+		add_fstab_entry "UUID=$(get_blkid_uuid_for_id "$DISK_ID_ROOT")" "/" "$DISK_ID_ROOT_TYPE" "${DISK_ID_ROOT_MOUNT_OPTS:-defaults}" "0 1"
 	fi
 	if [[ $IS_EFI == "true" ]]; then
 		add_fstab_entry "UUID=$(get_blkid_uuid_for_id "$DISK_ID_EFI")" "/boot/efi" "vfat" "defaults,noatime,fmask=0177,dmask=0077,noexec,nodev,nosuid,discard" "0 2"

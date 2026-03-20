@@ -225,6 +225,7 @@ function disk_create_partition() {
 		return 0
 	fi
 
+	local arg_size
 	if [[ $size == "remaining" ]]; then
 		arg_size=0
 	else
@@ -299,7 +300,7 @@ function disk_create_raid() {
 	local mddevice="/dev/md/$name"
 	local uuid="${DISK_ID_TO_UUID[$new_id]}"
 
-	extra_args=()
+	local extra_args=()
 	if [[ "$level" == 1 && "$name" == "efi" ]]; then
 		extra_args+=("--metadata=1.0")
 	else
@@ -334,6 +335,7 @@ function disk_create_luks() {
 
 	local device
 	local device_desc=""
+	local id="${arguments[id]-}"
 	if [[ -v arguments[id] ]]; then
 		device="$(resolve_device_by_id "${arguments[id]}")"
 		device_desc="$device ($id)"
@@ -585,7 +587,7 @@ function disk_format_btrfs() {
 		|| die "Could not erase previous file system signatures from $devices_desc"
 
 	# Collect extra arguments
-	extra_args=()
+	local extra_args=()
 	if [[ "${#devices}" -gt 1 ]] && [[ -v "arguments[raid_type]" ]]; then
 		extra_args+=("-d" "$raid_type")
 	fi
